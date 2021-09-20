@@ -22,48 +22,45 @@ int non_space_char(char c)
 
 char *word_start(char *str)
 {
-  int i = 0;
-  while(non_space_char(str[i]) ==0){
-    i++;
+  //loop until we reach a char
+  while(non_space_char(str[0]) ==0){
+    str++;
   }
-  return &str[i];
+  return str;
 }
 
 char *word_terminator(char *str)
 {
-  int i = 0;
-  while(space_char(str[i]) == 0){
-    i++;
+  //loop until we reach ' ' , '\t' or '\0'
+  while(non_space_char(str[0]) == 1){
+    str++;
   }
-  //printf("%s\n", &str[i]);
-  return &str[i];
+
+  return str;
 }
 
 int count_words(char *str)
 {
   int count = 0;
-  int i = 0;
-  while(1){
-    //moves to start of the word
-    word_start(&str[i]);
-    //if at end of word, count it
-    if(space_char(str[i]) && str[i+2] != '\0'){
-      count++;
-    }
 
-    //if at end of sentence
-    if(str[i] == '\0' && count != 0){
-      count++;
-      // printf("%d\n", count);
-      return count;
+  while(1){
+    //move to first char
+    str = word_start(str);
+
+    //if theres a space before the end
+    if(str[1] == '\0'){
+      break;
     }
-    
-    //if sentence is empty
-    else if (str[i] == '\0' && count == 0){
-      //printf("%d\n", count);
-      return count;
+    count++;
+
+    //move to terminator char
+    str = word_terminator(str);
+
+    //if at end of setence
+    if(str[0] == '\0'){
+      break;
     }
-    i++;
   }
-  return 0;
+  printf("Number of words: %d\n", count);
+  return count;
 }

@@ -9,7 +9,7 @@ int main()
   puts("$");
   fgets(userIn, 100, stdin);
   printf("%s\n", userIn);
-  word_start(userIn);
+  printf("%d\n",  count_words(userIn));
     // }
  
   return 0;
