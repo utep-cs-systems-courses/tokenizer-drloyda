@@ -64,3 +64,33 @@ int count_words(char *str)
   printf("Number of words: %d\n", count);
   return count;
 }
+
+char *copy_str(char *str, short len)
+{
+  char copy[100];
+  int i = 0;
+  while(len != 0){
+    copy[i] = str[i];
+    i++;
+    len--;
+  }
+  copy[i] = '\0';
+  printf("Copy str: %d\n", copy);
+  return &copy[0];
+}
+
+char **tokenize(char *str)
+{
+  char **tokens = (char**) malloc((count_words(str)+1), sizeof(char));
+  int j = 0;
+  for(int i = 0; i < strlen(str); i++){
+    if(space_char(str[i])||str[i] == '\0'){
+      tokens[j] = copy_str(str, i-1);
+      j++;
+      str = word_start(str);
+    }
+  }
+  tokens[j] = '\0';
+
+  return &tokens;
+}
