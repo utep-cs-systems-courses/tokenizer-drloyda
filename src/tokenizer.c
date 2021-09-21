@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "tokenizer.h"
 
@@ -67,7 +68,7 @@ int count_words(char *str)
 
 char *copy_str(char *str, short len)
 {
-  char copy[100];
+  char *copy = malloc(len);
   int i = 0;
   while(len != 0){
     copy[i] = str[i];
@@ -75,22 +76,51 @@ char *copy_str(char *str, short len)
     len--;
   }
   copy[i] = '\0';
-  printf("Copy str: %d\n", copy);
-  return &copy[0];
+  return copy;
 }
 
 char **tokenize(char *str)
 {
-  char **tokens = (char**) malloc((count_words(str)+1), sizeof(char));
-  int j = 0;
-  for(int i = 0; i < strlen(str); i++){
-    if(space_char(str[i])||str[i] == '\0'){
-      tokens[j] = copy_str(str, i-1);
-      j++;
-      str = word_start(str);
+  char **tokens = (char**)malloc(((count_words(str)+1)*sizeof(char*)));
+  int i=0,j=0;
+  
+  //move to start of sentence
+  str = word_start(str);
+  while(1){
+    if(space_char(str[i]) || str[i] == '\0'){
+      //if at end of word copy last word and add terminator
+      if(str[i] == '\0'){
+	tokens[j] = copy_str(str, i-1);
+	j++;
+	tokens[j] = 0;
+	break;
+      }else{
+	//if in between words, add the previous word
+	tokens[j] = copy_str(str, i);
+	str = word_terminator(str);
+	str = word_start(str);
+	j++;
+	i = 0;
+      }
     }
+    i++;
   }
-  tokens[j] = '\0';
+  //printf("[0] %s\n", tokens[0]);
+  //printf("[1] %s\n", tokens[1]);
+  //printf("[2] %s\n", tokens[2]);
+  //printf("[3] %s\n", tokens[3]);
+  //printf("[4] %s\n", tokens[4]);
+  return tokens;
+}
 
-  return &tokens;
+void print_tokens(char **tokens)
+{
+  for(int i = 0; i < strlen(*tokens); i++){
+    printf("[%d] %s\n",i, tokens[i]);
+  }
+}
+
+void free_tokens(char **tokens)
+{
+  free(tokens);
 }
