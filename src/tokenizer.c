@@ -81,46 +81,39 @@ char *copy_str(char *str, short len)
 
 char **tokenize(char *str)
 {
-  char **tokens = (char**)malloc(((count_words(str)+1)*sizeof(char*)));
-  int i=0,j=0;
-  
-  //move to start of sentence
-  str = word_start(str);
-  while(1){
-    if(space_char(str[i]) || str[i] == '\0'){
-      //if at end of word copy last word and add terminator
-      if(str[i] == '\0'){
-	tokens[j] = copy_str(str, i-1);
-	j++;
-	tokens[j] = 0;
-	break;
-      }else{
-	//if in between words, add the previous word
-	tokens[j] = copy_str(str, i);
-	str = word_terminator(str);
-	str = word_start(str);
-	j++;
-	i = 0;
-      }
+  //geting size and allocating memory
+  int len = count_words(str);
+  char **tokens = (char**)malloc((len+1)*sizeof(char*));
+
+  for(int i = 0; i < len; i++){
+    //size of word
+    short size = &*word_terminator(str) - &*word_start(str);
+    //if at last word
+    if(i == len-1){
+      tokens[i] = copy_str(str, size-1);
+      tokens[i+1] = 0;
     }
-    i++;
+    tokens[i] = copy_str(str, size);
+    str = word_terminator(str);
+    str = word_start(str);
   }
-  //printf("[0] %s\n", tokens[0]);
-  //printf("[1] %s\n", tokens[1]);
-  //printf("[2] %s\n", tokens[2]);
-  //printf("[3] %s\n", tokens[3]);
-  //printf("[4] %s\n", tokens[4]);
   return tokens;
 }
 
 void print_tokens(char **tokens)
 {
-  for(int i = 0; i < strlen(*tokens); i++){
-    printf("[%d] %s\n",i, tokens[i]);
+  int i = 0;
+  while (*tokens) {
+    printf( "[%d] %s\n",i, *tokens++ );
+    i++;
   }
 }
 
 void free_tokens(char **tokens)
 {
+  char **q = tokens;
+  while (*q) {
+    free(*q++);
+  }
   free(tokens);
 }
