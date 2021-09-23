@@ -87,7 +87,7 @@ char **tokenize(char *str)
 
   for(int i = 0; i < len; i++){
     //size of word
-    short size = &*word_terminator(str) - &*word_start(str);
+    short size = word_terminator(str) - word_start(str);
     //if at last word
     if(i == len-1){
       tokens[i] = copy_str(str, size-1);
@@ -97,6 +97,7 @@ char **tokenize(char *str)
     str = word_terminator(str);
     str = word_start(str);
   }
+  print_tokens(tokens);
   return tokens;
 }
 
@@ -111,9 +112,13 @@ void print_tokens(char **tokens)
 
 void free_tokens(char **tokens)
 {
-  char **q = tokens;
+  char ** q = tokens;
   while (*q) {
     free(*q++);
   }
   free(tokens);
 }
+
+
+
+

@@ -1,4 +1,4 @@
-OBJS= tokenizer.o uimain.o
+OBJS= tokenizer.o uimain.o history.o
 #target
 all: tokenizer
 
@@ -11,7 +11,7 @@ tokenizer: $(OBJS)
 
 #delete files
 clean:
-	rm -f *.o tokenizer
+	rm -f *.o tokenizer history
 
 run: tokenizer
 	./tokenizer
